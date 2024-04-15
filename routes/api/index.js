@@ -9,11 +9,18 @@ const sessionMiddleware = require('../../middlewares/sessionMiddleware')
 // 获取我的运动健康记录
 router.get('/tracker', sessionMiddleware, async (req, res, next) => {
   try {
-    let result = await ConsumptionModel.find()
+    const { uid } = req.session
+    let result = await ConsumptionModel.find({ userId: uid })
+    let data = result.map(item => {
+      return {
+        ...item.activity,
+        id: item._id
+      }
+    })
     res.json({
       code: successCode.SUCCESS_CODE,
       msg: 'get trackers success~',
-      data: result
+      data
     });
   } catch (error) {
     res.json({
@@ -25,9 +32,13 @@ router.get('/tracker', sessionMiddleware, async (req, res, next) => {
 });
 
 // 新增一条健康记录
-router.post('/tracker', async (req, res, next) => {
+router.post('/tracker', sessionMiddleware, tokenMiddleware, async (req, res, next) => {
   try {
-    let result = await ConsumptionModel.create(req.body)
+    const { uid } = req.session
+    let result = await ConsumptionModel.create({
+      activity: req.body,
+      userId: uid
+    })
     res.json({
       code: successCode.SUCCESS_CODE,
       msg: 'create tracker-log success~',
@@ -43,10 +54,11 @@ router.post('/tracker', async (req, res, next) => {
 });
 
 // 更新某条运动健康记录
-router.patch('/tracker/:id', tokenMiddleware, async (req, res, next) => {
+router.patch('/tracker/:id', sessionMiddleware, tokenMiddleware, async (req, res, next) => {
   const { id } = req.params
   try {
-    let result = await ConsumptionModel.updateOne({ _id: id }, req.body)
+    let { activity } = await ConsumptionModel.findById(id)
+    let result = await ConsumptionModel.updateOne({ _id: id }, { $set: { activity: { ...activity, ...req.body }} })
     res.json({
       code: successCode.SUCCESS_CODE,
       msg: 'update tracker-log success~',
@@ -62,7 +74,7 @@ router.patch('/tracker/:id', tokenMiddleware, async (req, res, next) => {
 });
 
 // 删除某条运动健康记录
-router.delete('/tracker/:id', tokenMiddleware, async (req, res, next) => {
+router.delete('/tracker/:id', sessionMiddleware, async (req, res, next) => {
   const { id } = req.params
   try {
     let result = await ConsumptionModel.deleteOne({ _id: id })

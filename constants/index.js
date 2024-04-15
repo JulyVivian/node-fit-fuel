@@ -9,7 +9,8 @@ const errCodes = {
     CREATE_ERROR: '1008',
     VALIDATE_ERROR: '1009',
     TOKEN_EMPTY: '1010',
-    SESSION_ERROR: '1011'
+    SESSION_ERROR: '1011',
+    EXISTED_USER: '1012'
 }
 
 const successCode = {

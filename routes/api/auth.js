@@ -14,6 +14,24 @@ router.post('/register', async (req, res, next) => {
     // 对密码进行加密处理
     const hashedPassword = md5(password);
     try {
+        let result = await UserModel.findOne({
+            username
+        })
+        if (result) {
+            return res.json({
+                code: errCodes.EXISTED_USER,
+                msg: '用户名已注册',
+                data: null
+            });
+        }
+    } catch (error) {
+        return res.json({
+            code: errCodes.REG_ERROR,
+            msg: 'register fail error ~',
+            data: null
+        });
+    }
+    try {
         let result = await UserModel.create({
             username,
             password: hashedPassword
@@ -83,7 +101,11 @@ router.post('/login', async (req, res, next) => {
 router.post('/logout', async (req, res, next) => {
     // 销毁session
     req.session.destroy(() => {
-        res.send('退出成功')
+        res.json({
+            code: successCode.SUCCESS_CODE,
+            msg: 'logout success~',
+            data: null
+        });
     })
 })
 

@@ -1,0 +1,1 @@
+import{i as r}from"./index.cb732601.js";function s(e,t){const o=r(t);return localStorage.getItem(e)&&(o.value=JSON.parse(localStorage.getItem(e))),{storedValue:o,setLocalStorage:a=>{localStorage.setItem(e,JSON.stringify(a)),o.value=a},clearLocalStorage:()=>{localStorage.removeItem(e),o.value=t}}}export{s as u};

@@ -1,0 +1,1 @@
+import{a as o}from"./axios.74fc0aed.js";const n=async t=>{const{data:a}=await o.post("/api/register",{...t});return a},i=async t=>{const{data:a}=await o.post("/api/login",{...t});return a},r=async()=>{const{data:t}=await o.post("/api/logout");return t};export{n as a,r as b,i as t};

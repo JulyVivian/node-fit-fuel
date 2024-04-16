@@ -81,7 +81,7 @@ router.post('/login', async (req, res, next) => {
         let token = jwt.sign({
             username
         }, SECRETKEY, {
-            expiresIn: 60 // 单位是s
+            expiresIn: 60 * 60 * 24 * 7 // 单位是s
         })
         return res.json({
           code: successCode.SUCCESS_CODE,

@@ -4,6 +4,9 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+// 解决刷新页面报错404的问题
+const history = require('connect-history-api-fallback')
+
 // 导入express-session
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
@@ -34,6 +37,8 @@ app.use(session({
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+app.use('/', history());
 
 app.use(logger('dev'));
 app.use(express.json());
